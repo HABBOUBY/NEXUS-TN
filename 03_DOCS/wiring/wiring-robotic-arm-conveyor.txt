@@ -1,0 +1,71 @@
+====================================================
+WIRING NOTES - ROBOTIC ARM + CONVEYOR SUBSYSTEM
+NEXUS-TN Project
+====================================================
+
+--------------------------------------------------
+1. POWER SUPPLY ARCHITECTURE
+--------------------------------------------------
+
+This subsystem uses 4 SEPARATE LiPo battery cells/packs instead of a
+single battery + voltage regulator setup.
+
+Reason for this choice:
+- No voltage regulator needed -> less heat loss, less wasted energy
+- Saves physical space inside the arm/conveyor enclosure
+- Each voltage rail gets its own clean, dedicated power source instead
+  of being stepped down from a single higher-voltage battery
+
+--------------------------------------------------
+2. VOLTAGE RAILS
+--------------------------------------------------
+
+RAIL 1 - 7V (LiPo)
+  -> Powers: all servo motors on the robotic arm
+  -> Used for: arm joints / gripper actuation
+
+RAIL 2 - 11.1V (3S LiPo)
+  -> Powers: DRV8825 stepper motor driver
+  -> The DRV8825 drives TWO motors:
+       a) Conveyor belt motor
+       b) Stepper motor moving the robotic arm along the
+          linear XX' axis (leadscrew / nut mechanism)
+
+RAIL 3 - 3.7V (1S LiPo)
+  -> Powers: ESP32 control board (logic / microcontroller)
+
+--------------------------------------------------
+3. CONTROL & VISION ARCHITECTURE
+--------------------------------------------------
+
+Camera: Intel RealSense (depth camera)
+
+Signal path:
+  Intel RealSense Camera --> Intermediate PC --> ESP32 (control board)
+
+Notes:
+- A PC is used here INSTEAD OF a Raspberry Pi.
+--------------------------------------------------
+4. GENERAL WIRING NOTES
+--------------------------------------------------
+
+- All rails use SEPARATE positive lines (7V / 11.1V / 3.7V), but should
+  share a COMMON GROUND (GND) between the ESP32, the DRV8825 driver,
+  and the PC interface, to keep signal references consistent.
+- Always confirm LiPo cell balance/voltage before powering the boards.
+- Double-check DRV8825 current limit (Vref) setting before connecting
+  the conveyor/XX' axis motors, to avoid overheating the driver.
+
+--------------------------------------------------
+5. TODO / TO COMPLETE
+--------------------------------------------------
+
+[ ] Add exact ESP32 GPIO pin mapping (STEP/DIR/EN for DRV8825, PWM
+    channels for servos)
+[ ] Add PC <-> ESP32 communication protocol used (Serial/USB, Wi-Fi, etc.)
+[ ] Add wiring diagram image reference (see /media/images or
+    /pcb/schematics-export)
+
+====================================================
+End of file
+====================================================
