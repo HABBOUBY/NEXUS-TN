@@ -338,8 +338,13 @@ allowing anyone to inspect, modify, remix, or reproduce any single part of the e
 Three motion studies are included in `04_MEDIA/SIMULATIONS/` to show mechanisms that are hard to convey from static renders alone:
 
 - **`simulation mvt xx' robotic-arm.gif`** — the robotic arm traveling along its XX' leadscrew axis.
+- <img width="289" height="244" alt="simulation mvt xx&#39; robotic-arm" src="https://github.com/user-attachments/assets/511a82f5-c064-44c0-ad4d-51649ebfd296" />
+
 - **`GIF SAMIR-KAHWEJI.gif`** — SAMIR-KAHWEJI transforming from 6 wheels to 4 during docking.
+- <img width="540" height="441" alt="GIF SAMIR-KAHWEJI" src="https://github.com/user-attachments/assets/d0fabeeb-72f3-4f38-b7e2-303c95243f43" />
+
 - **`simulation gripper samir-kahweji.gif`** — SAMIR-KAHWEJI's onboard gripper securing the product.
+<img width="366" height="279" alt="simulation gripper samir-kahweji" src="https://github.com/user-attachments/assets/191a87a2-87b6-4b0c-a83e-4c0f57644351" />
 
 ---
 
