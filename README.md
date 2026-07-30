@@ -320,9 +320,8 @@ AI helped review this submission against the shipping guide and organize this RE
 
 - Firmware: ESP32 control + OpenCV sorting pipeline
 - Firmware: SAMIR-KAHWEJI line-following / docking loop
-- Exact GPIO pin mapping (both ESP32 boards)
-- A community-designed 4th gripper type
 - Physical build, once printing/camera/Pi are accessible
+- An autonomous delivery truck with its own onboard mechanical system to take the product directly from SAMIR-KAHWEJI
 
 ---
 
