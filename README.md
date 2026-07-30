@@ -53,45 +53,33 @@ Built by **HABBOUBY EDEM** for [Beest](https://beest.hackclub.com/)
 
 ## About
 
-**NEXUS-TN** is a small industrial automation cell designed to pick up a product, inspect it, sort it, and deliver it to a mobile transport robot for onward delivery — the same kind of pick-and-place-and-transport logic found in real factory lines, scaled down into an open, 3D-printable, educational package.
+**NEXUS-TN** is a small industrial cell that picks up a product, inspects it, sorts it, and hands it off to a mobile transport robot — a mini factory line, fully open and 3D-printable.
 
-The station is built around three cooperating machines:
+1. **Robotic Arm** on a linear XX' axis, swappable gripper, RealSense vision.
+2. **Sorting Conveyor** — inspects and rejects damaged items.
+3. **SAMIR-KAHWEJI** — 6-to-4-wheel transport robot, delivers the product following a line.
 
-1. A **robotic arm**, mounted on a linear XX' axis, equipped with a swappable gripper and an Intel RealSense camera for vision-guided picking.
-2. A **sorting conveyor**, which carries the product past inspection and rejects damaged items before they reach the transport stage.
-3. **SAMIR-KAHWEJI**, an autonomous transport robot that folds from 6 wheels to 4, receives the product on its back, and carries it away following a line.
-
-All mechanical structure, wiring architecture, and the custom PCB were designed from scratch in SolidWorks and KiCad.
+Designed from scratch in SolidWorks and KiCad.
 
 ---
 
 ## Scope of This Submission
 
-This submission covers the **mechanical design (CAD)** and the **custom PCB (KiCad)** for the robotic arm + conveyor subsystem, plus the complete mechanical design of SAMIR-KAHWEJI. Full firmware (ESP32 control logic, OpenCV sorting pipeline, PID/line-following code) is not included at this stage — this project is being submitted as a hardware and electronics design, with the control/wiring architecture fully documented in `03_DOCS/wiring/`.
+**Mechanical CAD + custom KiCad PCB** for the arm/conveyor subsystem, plus the full mechanical design of SAMIR-KAHWEJI. Firmware is not included yet — control architecture is documented in `03_DOCS/wiring/`.
 
 ---
 
 ## Note on Physical Fabrication
 
-This submission is provided as a **complete, print-ready CAD and PCB design** (STEP, STL, and native SolidWorks/KiCad project files).
-
-I do not currently have access to a 3D printer, an Intel RealSense camera, or a Raspberry Pi, and all three are either unavailable or prohibitively expensive to import in Tunisia — import duties and customs taxes significantly raise the price of 3D printers, electronics, and imaging hardware compared to international markets, putting them out of reach for a student project. Local makerspaces with printing capability are few, mostly concentrated in the capital, and operate as private, paid facilities rather than open-access labs.
-
-For this reason, I have not yet been able to physically fabricate and photograph the assembled NEXUS-TN station. Every file needed to reproduce it — slicer-ready STL exports, STEP files, native SolidWorks source, and the full KiCad PCB project — is included in this repository, so the design can be fabricated and verified by anyone with access to the right hardware. In place of a live demo, the CAD renders and the movement simulations (see [Simulations](#simulations)) show the mechanisms in motion.
+I don't yet have access to a 3D printer, a RealSense camera, or a Raspberry Pi — import taxes make them very expensive in Tunisia, and local paid makerspaces are scarce. So NEXUS-TN ships as a **complete, print-ready CAD + PCB package** (STEP, STL, native source) rather than a photographed build. The renders and [simulations](#simulations) show the mechanisms in motion instead.
 
 ---
 
 ## The Story Behind NEXUS-TN
 
-NEXUS-TN didn't start as a factory. It started as a single robotic arm.
+NEXUS-TN started as a single robotic arm. While building it, I asked myself: does this have a real purpose — could it teach something, could it fit an actual industrial process? That question turned the arm into a full chain: arm → conveyor → transport robot.
 
-While designing that first arm, I asked myself a simple question: does this project actually have a purpose beyond being a cool mechanism? Could it help someone else understand how a real gripper or a real robotic joint works? Could it ever fit into something bigger — like an actual industrial process?
-
-That question is what turned a standalone arm into **NEXUS-TN: the industrial station**. Instead of stopping at "an arm that grips," I built the arm to feed a sorting conveyor, and the conveyor to feed a transport robot — a small, complete pick–sort–transport chain.
-
-Along the way, I noticed something about most robotics kits and arm projects I'd seen: they only ever expose **one** type of gripper. That's fine if you just want to complete a task, but it means anyone learning from that kit only ever sees one gripping principle, and if they want to explore another one, they usually have to buy an entirely different kit. That felt wasteful — both for a student's wallet and for their understanding of the field.
-
-So the robotic arm in NEXUS-TN was designed around **3 different, interchangeable gripper types**, plus a connector standard that lets anyone design and mount their own gripper on the same arm. The goal isn't just to build a working robot — it's to spread the knowledge of how different gripping mechanisms actually work, as cheaply and openly as possible.
+I also noticed most robotics kits only ever expose **one** gripper type, forcing anyone curious about a different mechanism to buy a whole new kit. So the arm here supports **3 interchangeable gripper types** plus an open connector standard — to teach more, and cost less.
 
 ---
 
@@ -99,11 +87,11 @@ So the robotic arm in NEXUS-TN was designed around **3 different, interchangeabl
 
 | # | Subsystem | Role |
 |---|-----------|------|
-| 1 | **Robotic Arm** (3 gripper types) | Picks the product, identifies it via camera, places it on the conveyor / hands it to SAMIR-KAHWEJI |
-| 2 | **Sorting Conveyor** | Moves the product under inspection; rejects damaged items before transport |
-| 3 | **Transport Robot "SAMIR-KAHWEJI"** | Receives the product on its back and drives it to its destination, following a line |
+| 1 | **Robotic Arm** (3 gripper types) | Picks and identifies the product, places it on the conveyor / on SAMIR-KAHWEJI |
+| 2 | **Sorting Conveyor** | Inspects the product, rejects damaged items |
+| 3 | **SAMIR-KAHWEJI** | Carries the product to its destination, line-following |
 
-A shared control philosophy ties them together: the robotic arm and the conveyor are commanded by the **same ESP32 board** (so the conveyor only runs when the arm/vision system tells it to), while SAMIR-KAHWEJI runs its own ESP32, fed by a Raspberry Pi 5 handling onboard vision.
+The arm and conveyor share one ESP32. SAMIR-KAHWEJI runs its own ESP32, fed by a Raspberry Pi 5.
 
 ---
 
@@ -113,55 +101,43 @@ A shared control philosophy ties them together: the robotic arm and the conveyor
   <img src="04_MEDIA/IMAGES/4K IMAGES/main_station_of_robotics-arm.png" width="600">
 </p>
 
-The arm rides on an **XX' linear axis** (leadscrew + nut mechanism) so it can travel horizontally between the pickup zone and the conveyor / SAMIR-KAHWEJI's back. Vision is handled by an **Intel RealSense depth camera**, connected to a **PC running Thonny**, where **OpenCV** (plus whatever additional Python libraries the task needs) analyzes the product before deciding what the arm should do. The PC then relays the decision to the **ESP32** control board, which drives the arm's servos, the leadscrew stepper, and the conveyor.
+The arm travels on an **XX' leadscrew axis**. An **Intel RealSense** camera feeds a **PC (Thonny + OpenCV)**, which sends decisions to the **ESP32**, driving the arm's servos, the leadscrew stepper, and the conveyor. The **PCB rides on the arm itself**, routed to stay clear of its full range of motion.
 
-The **custom PCB is mounted directly on the arm**, deliberately positioned and routed so that it never obstructs the arm's free range of motion — the board rides with the arm instead of trailing loose wires that could snag the mechanism.
-
-### The Modular Gripper System
-
-Instead of a single fixed end-effector, NEXUS-TN's arm uses a **two-piece Link 2** (the connecting arm segment between Arm 1 and the gripper):
-
-- One piece carries a **tapped (threaded bore)** interface and always stays the same — it's the part that mounts to the arm.
-- The other piece carries a **matching thread** and is specific to whichever gripper is attached.
-
-To switch grippers — or to mount a completely custom one you've designed yourself — you only need to swap the second, threaded piece. The tapped support piece (which also carries the wiring/linker routing) never changes. It's a small mechanical trick, but it means one arm can teach three completely different gripping principles, and it leaves the door open for anyone to design a fourth.
-
-Three gripper types are included as a working reference and as inspiration for your own design:
+**Modular gripper system:** Link 2 (arm → gripper) is split in two — a **tapped** piece that always stays on the arm, and a **threaded** piece specific to each gripper. Swap only the threaded piece to change grippers, or design your own.
 
 <table>
 <tr>
 <td width="33%" align="center">
 
-**Gripper Type 1 — "Bird's Beak"**
+**Type 1 — "Bird's Beak"**
 
 <img src="04_MEDIA/IMAGES/GRIPPER TYPE 1.PNG" width="260">
 
-Two jaws that don't rotate around a pivot — instead, they translate in a straight line, closing and opening like a beak.
-Closed: `/\`  ·  Open: `:/  \`
+Jaws translate in a straight line instead of pivoting. Closed `/\` · Open `:/ \`
 
 </td>
 <td width="33%" align="center">
 
-**Gripper Type 2 — 5-Finger "Octopus"**
+**Type 2 — 5-Finger "Octopus"**
 
 <img src="04_MEDIA/IMAGES/GRIPPER TYPE 2.PNG" width="260">
 
-Five independent fingers close around the product from multiple sides at once, closer in spirit to an octopus grip than a mechanical claw — better conformity on irregular shapes.
+Five independent fingers close around the product for better conformity on irregular shapes.
 
 </td>
 <td width="33%" align="center">
 
-**Gripper Type 3 — Classic Parallel Gripper**
+**Type 3 — Classic Parallel**
 
 <img src="04_MEDIA/IMAGES/GRIPPER TYPE 3.PNG" width="260">
 
-The familiar two-finger parallel gripper, driven through a rack-and-pinion / belt-and-pulley stage — the reference point most people will already recognize.
+Two-finger gripper driven by a rack-and-pinion / belt stage.
 
 </td>
 </tr>
 </table>
 
-Each gripper type has its own SolidWorks source, STEP export, and STL set (see [Repository Structure](#repository-structure)) so any of the three can be printed and mounted independently of the others.
+Each type has its own SolidWorks, STEP, and STL set — printable independently.
 
 ---
 
@@ -171,15 +147,11 @@ Each gripper type has its own SolidWorks source, STEP export, and STL set (see [
   <img src="04_MEDIA/IMAGES/4K IMAGES/CONVEYOR1.png" width="600">
 </p>
 
-| Property | Value |
-|----------|------:|
-| Width | 90 mm |
-| Length | 500 mm |
-| Height | 65 mm |
+| Width | Length | Height |
+|:-:|:-:|:-:|
+| 90 mm | 500 mm | 65 mm |
 
-The belt is driven by a **stepper motor**, controlled by the **same ESP32 board** that drives the robotic arm — the camera identifies the product, and the ESP32 decides when the conveyor should run.
-
-A **rack-and-pinion pusher mechanism** sits near the start of the belt: if the vision system flags a product as broken or torn, the pusher shifts it off the conveyor immediately, right at the entrance, dropping it into a separate recycling/repair bin instead of letting it travel further down the line.
+Belt driven by a **stepper motor**, controlled by the arm's ESP32. A **rack-and-pinion pusher** at the conveyor's entrance ejects broken/torn products straight into a recycling bin before they travel further.
 
 ---
 
@@ -189,20 +161,16 @@ A **rack-and-pinion pusher mechanism** sits near the start of the belt: if the v
   <img src="04_MEDIA/IMAGES/4K IMAGES/SAMIR-KAHWEJI.png" width="600">
 </p>
 
-SAMIR-KAHWEJI is what I consider the most mechanically interesting part of NEXUS-TN: a mobile transport platform that **transforms from 6 wheels down to 4** — 2 guide wheels + 4 drive wheels — to dock, load, and set off again.
-
 <p align="center">
   <img src="04_MEDIA/IMAGES/SAMIR_KAHWEJI CAD.PNG" width="290">
   <img src="04_MEDIA/IMAGES/SAMIR-KAWEJI1 CAD.PNG" width="290">
 </p>
 
-**Navigation & vision:** a camera sits on a **2-degrees-of-freedom support**, letting it follow the black guide line on the ground and also look down to detect the product sitting on the robot's back. A **Raspberry Pi 5** handles all the camera processing and sends its decisions to the onboard **ESP32**, which then issues the actual motor/servo commands. *(Note: the "truck" model visible in the CAD is only a placeholder prop, used to help visualize where and how the product sits on the robot's back — not a real component.)*
-
-**Docking maneuver:** once SAMIR-KAHWEJI reaches its target position, it doesn't just stop — it performs a small arc-shaped trajectory, then reverses to dock using its two guide wheels. Those guide wheels double as a stabilizing base, keeping the robot balanced while it's stationary and loading/unloading.
-
-**Wheel transformation:** a servo lifts the two front wheels to switch between the 6-wheel (guided) and 4-wheel (drive-only) configurations. Because that lift briefly changes the ride height on the front axle, **4 shock absorbers** are fitted to the drive wheels to absorb the resulting gap/impact and keep the robot stable through the transition.
-
-**Onboard gripper:** SAMIR-KAHWEJI also carries its own small rack-and-pinion, servo-actuated gripper/clamp (see `assembly gripper samir kahweji` parts) to secure the product once it's placed on its back, so it doesn't shift during transit.
+- **6-to-4 wheels:** a servo lifts the 2 front (guide) wheels for driving; they drop back down to dock — *(the "truck" prop in the CAD is just a placeholder)*
+- **Vision:** camera on a 2-DOF mount, line-following + product detection. Raspberry Pi 5 processes video, sends commands to the onboard ESP32.
+- **Docking:** small arc trajectory, then reverses in on its 2 guide wheels, which also stabilize the robot at rest.
+- **4 shock absorbers** absorb the ride-height change when the front wheels lift/drop.
+- **Onboard gripper:** a small rack-and-pinion, servo-driven clamp secures the product during transit.
 
 ---
 
@@ -213,27 +181,21 @@ SAMIR-KAHWEJI is what I consider the most mechanically interesting part of NEXUS
   <img src="04_MEDIA/IMAGES/PCB-DESIGN F2.PNG" width="400">
 </p>
 
-The robotic arm + conveyor subsystem is controlled by a **custom PCB designed in KiCad**, built around an **ESP32-WROOM-32**. Key design choices, documented in full in `03_DOCS/wiring/`:
+Custom **KiCad PCB** around an **ESP32-WROOM-32**, with 4 separate LiPo rails (common ground):
 
-- **4 separate LiPo rails** instead of one battery + regulator, to avoid voltage-regulator heat loss and give each subsystem a clean, dedicated supply:
-  - **7V** → all arm servo motors (joints / gripper actuation)
-  - **11.1V (3S)** → DRV8825 stepper driver, which drives *both* the conveyor belt motor and the XX' axis leadscrew stepper
-  - **3.7V (1S)** → the ESP32 itself
-- All rails share a **common ground** between the ESP32, the DRV8825, and the PC vision interface.
+- **7V** → arm servos
+- **11.1V (3S)** → DRV8825, driving both the conveyor motor and the XX' leadscrew stepper
+- **3.7V (1S)** → the ESP32
 
-SAMIR-KAHWEJI, by contrast, doesn't need a dedicated PCB — its wiring (ESP32 + 4 IBT motor drivers + PWM servo expansion board + Raspberry Pi 5 on its own isolated power bank) is simple enough to wire directly; full details are in `wiring-transport-robot-samir-kahweji.txt`.
+SAMIR-KAHWEJI needs no dedicated PCB — ESP32 + 4 IBT drivers + PWM servo board + an isolated Raspberry Pi 5 power bank, wired directly (see `wiring-transport-robot-samir-kahweji.txt`).
 
-The full electronics BOM, with part specs and purchase links, is in [`03_DOCS/list of electronics.xlsx`](03_DOCS/list%20of%20electronics.xlsx).
+Full BOM: [`03_DOCS/list of electronics.xlsx`](03_DOCS/list%20of%20electronics.xlsx).
 
 ---
 
 ## 3D Printing — Materials & Settings
 
-### Materials
-- **ABS** for structural and high-stress components (arm joints, gripper mechanisms, wheel-transformation parts)
-- **PLA** for lightweight and cosmetic parts (covers, housings)
-
-### Recommended Print Settings
+**ABS** for structural/high-stress parts, **PLA** for covers and lightweight parts.
 
 | Setting | Value |
 |---------|------|
@@ -253,7 +215,7 @@ The full electronics BOM, with part specs and purchase links, is in [`03_DOCS/li
 | M3 | 20 mm | 20 |
 | M5 | 40 mm | 10 |
 
-**Total: 70 screws across 2 diameters (M3 / M5).**
+**Total: 70 screws.**
 
 ---
 
@@ -266,45 +228,39 @@ NEXUS-TN/
 │   ├── SOLIDWORKS PARTS/
 │   │   ├── ROBOTIC_ARM(3 TYPES)/
 │   │   │   ├── SOLIDWORKS PARTS/
-│   │   │   │   ├── ROBOTICS_ARM TYPE 1/   # Native source — Arm Type 1
-│   │   │   │   ├── ROBOTIC_ARM TYPE 2/    # Native source — Arm Type 2 + 5-finger gripper
-│   │   │   │   └── ROBOTIC_ARM TYPE 3/    # Native source — Arm Type 3 + classic parallel gripper
-│   │   │   └── STEP FILES/                # STEP export for each of the 3 arm assemblies
+│   │   │   │   ├── ROBOTICS_ARM TYPE 1/   # Arm Type 1
+│   │   │   │   ├── ROBOTIC_ARM TYPE 2/    # Arm Type 2 + 5-finger gripper
+│   │   │   │   └── ROBOTIC_ARM TYPE 3/    # Arm Type 3 + classic gripper
+│   │   │   └── STEP FILES/
 │   │   ├── CONVEYOR/
-│   │   │   ├── SOLIDWORKS PARTS/
-│   │   │   └── STEP FILES/
 │   │   ├── TRANSPORT_ROBOT (SAMIR-KAHWEJI)/
-│   │   │   ├── SOLIDWORKS PARTS/
-│   │   │   └── STEP FILES/
-│   │   └── main assembly conveyor_roboticarm_transportrobot.STEP   # full ecosystem, single file
+│   │   └── main assembly conveyor_roboticarm_transportrobot.STEP
 │   │
 │   └── STL/
 │       ├── ROBOTIC_ARM(3 TYPES)/
-│       │   ├── STL ROBOTIC ARM 1/         # Slicer-ready — Arm Type 1
-│       │   ├── STL ROBOTIC ARM 2/         # Slicer-ready — Arm Type 2 (5-finger gripper)
-│       │   └── dossier tanthif 2/         # Slicer-ready — Arm Type 3 (classic gripper)
-│       ├── CONVOYER/                      # Slicer-ready — conveyor + sorting pusher
-│       └── TRANSPORT_ROBOT (SAMIR-KAHWEJI)/  # Slicer-ready — SAMIR-KAHWEJI, all parts
+│       │   ├── STL ROBOTIC ARM 1/         # Arm Type 1
+│       │   ├── STL ROBOTIC ARM 2/         # Arm Type 2
+│       │   └── dossier tanthif 2/         # Arm Type 3
+│       ├── CONVOYER/
+│       └── TRANSPORT_ROBOT (SAMIR-KAHWEJI)/
 │
 ├── 02_PCB_DESIGN/
-│   ├── KICAD DESIGN.kicad_sch        # Schematic
-│   ├── KICAD DESIGN.kicad_pcb        # PCB layout
-│   ├── KICAD DESIGN.kicad_pro / .kicad_prl
-│   └── carte essaie 1.step           # 3D STEP export of the board (for CAD integration on the arm)
+│   ├── KICAD DESIGN.kicad_sch / .kicad_pcb / .kicad_pro / .kicad_prl
+│   └── carte essaie 1.step
 │
 ├── 03_DOCS/
-│   ├── list of electronics.xlsx      # Full BOM with specs + purchase links
+│   ├── list of electronics.xlsx
 │   └── wiring/
 │       ├── wiring-robotic-arm-conveyor.txt
 │       └── wiring-transport-robot-samir-kahweji.txt
 │
 ├── 04_MEDIA/
 │   ├── IMAGES/
-│   │   ├── 4K IMAGES/                 # Hero renders: station, arm+conveyor, SAMIR-KAHWEJI, conveyor
-│   │   ├── GRIPPER TYPE 1.PNG / GRIPPER TYPE 2.PNG / GRIPPER TYPE 3.PNG
-│   │   ├── robotic arm type1.PNG / robotic arm type 2.PNG / robotic arm type 3.PNG
+│   │   ├── 4K IMAGES/
+│   │   ├── GRIPPER TYPE 1/2/3.PNG
+│   │   ├── robotic arm type 1/2/3.PNG
 │   │   ├── SAMIR_KAHWEJI CAD.PNG / SAMIR-KAWEJI1 CAD.PNG
-│   │   └── PCB-DESIGN F1.PNG / PCB-DESIGN F2.PNG
+│   │   └── PCB-DESIGN F1/F2.PNG
 │   └── SIMULATIONS/
 │       ├── simulation mvt xx' robotic-arm.gif
 │       ├── GIF SAMIR-KAHWEJI.gif
@@ -314,55 +270,62 @@ NEXUS-TN/
 └── README.md
 ```
 
-**On the folder names inside `ROBOTIC_ARM(3 TYPES)`:** the STL and SolidWorks subfolders aren't always named identically (`dossier tanthif 2`, `STL ROBOTIC ARM 1/2`, etc.) — they grew organically while iterating on three gripper designs in parallel. Each one is self-contained: open any single "TYPE" folder and you'll find everything needed to print and assemble that specific arm + gripper combination on its own, without pulling in the other two.
-
-**On `main assembly conveyor_roboticarm_transportrobot.STEP`:** this is the entire ecosystem — arm, conveyor, and SAMIR-KAHWEJI — combined into one STEP assembly, useful if you want to see how the three subsystems physically relate to each other in space.
+Folder names under `ROBOTIC_ARM(3 TYPES)` grew organically per gripper type (`dossier tanthif 2`, etc.) — each "TYPE" folder is self-contained and printable on its own. `main assembly conveyor_roboticarm_transportrobot.STEP` combines the whole ecosystem into one file.
 
 ---
 
 ## CAD Files
 
-This repository includes, for every subsystem (robotic arm ×3 types, conveyor, SAMIR-KAHWEJI):
-
-- **Native SolidWorks source** — full parametric history, under `01_3D/SOLIDWORKS PARTS/`
-- **STEP files** — fully editable in any CAD tool, under each subsystem's `STEP FILES/` folder
-- **STL files** — ready to slice and print, under `01_3D/STL/`
-
-allowing anyone to inspect, modify, remix, or reproduce any single part of the ecosystem independently.
+Per subsystem: **native SolidWorks** source, **STEP** (any CAD tool), and **STL** (slicer-ready) — under `01_3D/`.
 
 ---
 
 ## Simulations
 
-Three motion studies are included in `04_MEDIA/SIMULATIONS/` to show mechanisms that are hard to convey from static renders alone:
+<table>
+<tr>
+<td width="33%" align="center">
 
-- **`simulation mvt xx' robotic-arm.gif`** — the robotic arm traveling along its XX' leadscrew axis.
-- <img width="289" height="244" alt="simulation mvt xx&#39; robotic-arm" src="https://github.com/user-attachments/assets/511a82f5-c064-44c0-ad4d-51649ebfd296" />
+**XX' axis travel**
 
-- **`GIF SAMIR-KAHWEJI.gif`** — SAMIR-KAHWEJI transforming from 6 wheels to 4 during docking.
-- <img width="540" height="441" alt="GIF SAMIR-KAHWEJI" src="https://github.com/user-attachments/assets/d0fabeeb-72f3-4f38-b7e2-303c95243f43" />
+<img width="300" height="253" alt="simulation mvt xx' robotic-arm" src="https://github.com/user-attachments/assets/511a82f5-c064-44c0-ad4d-51649ebfd296" />
 
-- **`simulation gripper samir-kahweji.gif`** — SAMIR-KAHWEJI's onboard gripper securing the product.
-<img width="366" height="279" alt="simulation gripper samir-kahweji" src="https://github.com/user-attachments/assets/191a87a2-87b6-4b0c-a83e-4c0f57644351" />
+</td>
+<td width="33%" align="center">
+
+**6-to-4 wheel transform**
+
+<img width="300" height="245" alt="GIF SAMIR-KAHWEJI" src="https://github.com/user-attachments/assets/d0fabeeb-72f3-4f38-b7e2-303c95243f43" />
+
+</td>
+<td width="33%" align="center">
+
+**SAMIR-KAHWEJI's onboard gripper**
+
+<img width="300" height="229" alt="simulation gripper samir-kahweji" src="https://github.com/user-attachments/assets/191a87a2-87b6-4b0c-a83e-4c0f57644351" />
+
+</td>
+</tr>
+</table>
 
 ---
 
 ## On AI Assistance
 
-As with structuring a project of this scale for the first time on GitHub, I used AI assistance to help review this submission against the shipping guide requirements and to help draft and organize this README from my notes. All design work — CAD modeling, PCB design, mechanism choices, and engineering decisions — is my own.
+AI helped review this submission against the shipping guide and organize this README. All CAD, PCB, and engineering decisions are my own.
 
 ---
 
 ## Future Improvements
 
-- Firmware: ESP32 control logic for the arm/conveyor, and the OpenCV sorting pipeline
-- Firmware: SAMIR-KAHWEJI line-following + docking control loop on the Raspberry Pi 5 / ESP32
-- Exact GPIO pin mapping for both ESP32 boards (documented as a TODO in the wiring notes)
-- A 4th, fully community-designed gripper type, to demonstrate the Link 2 standard in practice
-- Physical build and photographed assembly, once 3D printing and the camera/Raspberry Pi are accessible
+- Firmware: ESP32 control + OpenCV sorting pipeline
+- Firmware: SAMIR-KAHWEJI line-following / docking loop
+- Exact GPIO pin mapping (both ESP32 boards)
+- A community-designed 4th gripper type
+- Physical build, once printing/camera/Pi are accessible
 
 ---
 
 ## License
 
-This project is released under the **MIT License**.
+**MIT License**.
