@@ -297,6 +297,8 @@ Per subsystem: **native SolidWorks** source, **STEP** (any CAD tool), and **STL*
 
 <img width="300" height="245" alt="GIF SAMIR-KAHWEJI" src="https://github.com/user-attachments/assets/d0fabeeb-72f3-4f38-b7e2-303c95243f43" />
 
+The gap created in the drive wheels during the transformation is absorbed by the 4 shock absorbers.
+
 </td>
 <td width="33%" align="center">
 
@@ -318,10 +320,11 @@ AI helped review this submission against the shipping guide and organize this RE
 
 ## Future Improvements
 
+- Physical build, once printing/camera/Pi are accessible
 - Firmware: ESP32 control + OpenCV sorting pipeline
 - Firmware: SAMIR-KAHWEJI line-following / docking loop
-- Physical build, once printing/camera/Pi are accessible
 - An autonomous delivery truck with its own onboard mechanical system to take the product directly from SAMIR-KAHWEJI
+
 
 ---
 
