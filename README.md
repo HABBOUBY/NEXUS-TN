@@ -14,7 +14,6 @@
   <img src="04_MEDIA/IMAGES/4K IMAGES/main_station_of_robotics-arm.png" width="215">
   <img src="04_MEDIA/IMAGES/4K IMAGES/CONVEYOR1.png" width="215">
   <img src="04_MEDIA/IMAGES/4K IMAGES/SAMIR-KAHWEJI.png" width="215">
-  <img src="04_MEDIA/IMAGES/GRIPPER TYPE 3.PNG" width="215">
 </p>
 
 ![ESP32](https://img.shields.io/badge/ESP32-WROOM--32-red)
