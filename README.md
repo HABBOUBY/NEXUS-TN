@@ -131,7 +131,7 @@ Five independent fingers close around the product for better conformity on irreg
 
 <img src="04_MEDIA/IMAGES/GRIPPER TYPE 3.PNG" width="260">
 
-Two-finger gripper driven by a rack-and-pinion / belt stage.
+10-finger gripper driven by two pinions.
 
 </td>
 </tr>
@@ -309,13 +309,6 @@ The gap created in the drive wheels during the transformation is absorbed by the
 </td>
 </tr>
 </table>
-
----
-
-## On AI Assistance
-
-AI helped review this submission against the shipping guide and organize this README. All CAD, PCB, and engineering decisions are my own.
-
 ---
 
 ## Future Improvements
