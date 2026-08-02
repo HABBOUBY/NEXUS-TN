@@ -23,7 +23,7 @@
 ![3D Printing](https://img.shields.io/badge/Fabrication-FDM%203D%20Printing-success)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
-Built by **HABBOUBY EDEM** for [Beest](https://beest.hackclub.com/)
+Built by **HABBOUBY EDEM**
 
 </div>
 
